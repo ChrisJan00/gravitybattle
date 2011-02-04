@@ -32,7 +32,6 @@ function prepareGame()
 	/////////////////////////////////////
 	GLOBAL.gravity = 500;
 	GLOBAL.gravityDir = 0;
-	GLOBAL.drag = 200;
 }
 
 // gravityDir:

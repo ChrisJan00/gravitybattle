@@ -1,9 +1,8 @@
---  gravity (normal)
---  gravity (rotating)
+--  walljump!
 --  animations
 --  spikes
 --  gravity tiles
---  walljump!
+
 --  second player
 --  graphics for that all
 --  ai?

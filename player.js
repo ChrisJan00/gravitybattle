@@ -18,6 +18,8 @@ var Player = function(x,y) {
 	self.vx = 0;
 	self.vy = 0;
 	self.speed = 200;
+	self.drag = 0.04;
+	self.accel = 0.1;
 	self.w = 16;
 	self.h = 16;
 	self.frameCount = 9;
@@ -89,60 +91,55 @@ var Player = function(x,y) {
 	self.parseKeys = function() {
 		switch(GLOBAL.gravityDir) {
 			case 0:
-				// up
-				self.vx = 0;
-				// self.vy = 0;
-				if (self.keys.check("up") && self.standing(self.dts))
-					self.vy = -1;
-				// if (self.keys.check("down"))
-					// self.vy = 1;
-				if (self.keys.check("left"))
-					self.vx = -1;
-				if (self.keys.check("right"))
-					self.vx = 1;
-				break;
-				
 			case 1:
-				// down
-				self.vx = 0;
-				// self.vy = 0;
-				// if (self.keys.check("up") && self.standing(dts))
-					// self.vy = -1;
-				if (self.keys.check("down") && self.standing(self.dts))
+				var mx = 0;
+				if (GLOBAL.gravityDir==0 && self.keys.check("up") && self.standing(self.dts))
+					self.vy = -1;
+				if (GLOBAL.gravityDir==1 && self.keys.check("down") && self.standing(self.dts))
 					self.vy = 1;
 				if (self.keys.check("left"))
-					self.vx = -1;
+					mx = -1;
 				if (self.keys.check("right"))
-					self.vx = 1;
-				break;
-			
-			case 2:
-				// left
-				// self.vx = 0;
-				self.vy = 0;
-				if (self.keys.check("up"))
-					self.vy = -1;
-				if (self.keys.check("down"))
-					self.vy = 1;
-				// if (self.keys.check("left"))
-					// self.vx = -1;
-				if (self.keys.check("right") && self.standing(self.dts))
-					self.vx = 1;
-				break;
+					mx = 1;
 				
-			case 3:
-				// right
-				self.vy = 0;
-				// self.vx = 0;
-				if (self.keys.check("up"))
-					self.vy = -1;
-				if (self.keys.check("down"))
-					self.vy = 1;
-				if (self.keys.check("left") && self.standing(self.dts))
-					self.vx = -1;
-				// if (self.keys.check("right"))
-					// self.vx = 1;
+				self.vx = self.vx + mx * self.accel;
+				
+				if (self.vx-self.drag>0)
+					self.vx -= self.drag;
+				else if (self.vx+self.drag<0)
+					self.vx += self.drag;
+				else
+					self.vx = 0;
+				
+				if (self.vx>1) self.vx=1;
+				if (self.vx<-1) self.vx=-1;
 			break;
+		
+			case 2:
+			case 3:
+				var my = 0;
+				if (self.keys.check("up"))
+					my = -1;
+				if (self.keys.check("down"))
+					my = 1;
+				if (GLOBAL.gravityDir==2 && self.keys.check("right") && self.standing(self.dts))
+					self.vx = 1;
+				if (GLOBAL.gravityDir==3 && self.keys.check("left") && self.standing(self.dts))
+					self.vx = -1;
+					
+				self.vy = self.vy + my * self.accel;
+				
+				if (self.vy-self.drag>0)
+					self.vy -= self.drag;
+				else if (self.vy+self.drag<0)
+					self.vy += self.drag;
+				else
+					self.vy = 0;
+				
+				if (self.vy>1) self.vy=1;
+				if (self.vy<-1) self.vy=-1;
+				
+				break;
 		}
 	}
 	
