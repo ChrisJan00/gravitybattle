@@ -2,6 +2,7 @@
 GLOBAL.gameControl = new GameControl();
 GLOBAL.player1 = new Player(120,420);
 GLOBAL.player2 = new Player(480,420);
+GLOBAL.player2.animationStrip.src = "graphics/Player2.png";
 GLOBAL.level = new Level();
 
 function loaderProgress()

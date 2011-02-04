@@ -10,7 +10,7 @@ var Player = function(x,y) {
 	// ] );
 	self.keys = new( function() { this.check = function( str ) { return false; } } );
 	self.animationStrip = new Image();
-    self.animationStrip.src = "graphics/Player.png";
+    self.animationStrip.src = "graphics/Player1.png";
 	
 	self.x = x;
 	self.y = y;
