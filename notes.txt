@@ -1,9 +1,9 @@
---  gravity (normal)
---  gravity (rotating)
+--  walljump! -- todo...
 --  animations
 --  spikes
---  blocks
---  second player
+
+--  pile that grows upside down -- todo
+--  second player (collision between players)
 --  graphics for that all
 --  ai?
 -- --------------------------

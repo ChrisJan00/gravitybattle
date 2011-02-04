@@ -1,11 +1,13 @@
 
 GLOBAL.gameControl = new GameControl();
-GLOBAL.player1 = new Player(320,240);
+GLOBAL.player1 = new Player(120,420);
+GLOBAL.player2 = new Player(480,420);
+GLOBAL.player2.animationStrip.src = "graphics/Player2.png";
 GLOBAL.level = new Level();
 
 function loaderProgress()
 {
-	if (!GLOBAL.player1.animationStrip.complete)
+	if (!GLOBAL.player1.complete)
 		return 0;
 	if (!GLOBAL.level.tiles.complete)
 		return 50;
@@ -31,14 +33,41 @@ function prepareGame()
 	
 	/////////////////////////////////////
 	GLOBAL.gravity = 500;
-	GLOBAL.gravityDir = 1;
-	GLOBAL.drag = 200;
+	GLOBAL.gravityDir = 0;
+	
+	// player 1
+	GLOBAL.player1.keys = GLOBAL.keyManager.appendMapping([
+		["up", 38],
+		["down", 40],
+		["left", 37],
+		["right", 39],
+		["action1", 75],
+		["action2", 76]
+	] );
+	// player 2
+	GLOBAL.player2.keys = GLOBAL.keyManager.appendMapping([
+		["up", 69],
+		["down", 68],
+		["left", 83],
+		["right", 70],
+		["action1", 81],
+		["action2", 65]
+	] );
+	GLOBAL.player1.gravityPile = new GravityPile(640 - 16, 0, 10);
 }
+
+// gravityDir:
+// 0: up
+// 1: down
+// 2: right
+// 3: left
+
 
 // Use this function to update the simulation.  dt will be the same as gameControl.updateStep, given in ms
 function update(dt) 
 {
 	GLOBAL.player1.update(dt);
+	GLOBAL.player2.update(dt);
 }
 
 // Use this function to update the graphics, using the game state computed in "update".  dt is given in milliseconds and represents
@@ -47,4 +76,5 @@ function update(dt)
 function draw(dt)
 { 
 	GLOBAL.player1.draw(dt);
+	GLOBAL.player2.draw(dt);
 }
