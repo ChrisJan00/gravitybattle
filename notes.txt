@@ -1,0 +1,24 @@
+--  gravity (normal)
+--  gravity (rotating)
+--  animations
+--  spikes
+--  blocks
+--  second player
+--  graphics for that all
+--  ai?
+-- --------------------------
+
+Explanation of the idea:
+
+ It's a combat platformer, for two players (hotseat)
+ You're inside of a room full of hazards to avoid, and platforms to jump on to.
+ Each player has a pile of tiles with arrows (8 possibilities)
+ aside from the movement buttons, they have 2 action buttons: "activate" and "discard"
+ with "activate", they consume the current tile.  The arrow indicates the new "down" direction
+ with "discard", the current tile is discarded, and the next one in the pile becomes the current
+ with a timer, a new tile is dropped every X time... the delay can change over time to make the game more hectic
+ also, new hazards could appear in the level over time, making it more dangerous
+ the first not to die is the winner
+ 
+ then there's a score...
+ 
