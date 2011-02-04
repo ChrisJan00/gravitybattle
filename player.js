@@ -27,19 +27,27 @@ var Player = function(x,y) {
 		var dts = dt/1000;
 		
 		self.vx = 0;
-		self.vy = 0;
-		if (self.keys.check("up"))
+		// self.vy = 0;
+		if (self.keys.check("up") && self.standing(dts))
 			self.vy = -1;
-		if (self.keys.check("down"))
-			self.vy = 1;
+		// if (self.keys.check("down"))
+			// self.vy = 1;
 		if (self.keys.check("left"))
 			self.vx = -1;
 		if (self.keys.check("right"))
 			self.vx = 1;
+			
+		self.vy = self.vy + dts * GLOBAL.gravity/self.speed;
 		
 		var candidatePos = self.updatedPos(dts);
 		if (!GLOBAL.level.collided(candidatePos.x,candidatePos.y,self.w,self.h)) {
 			self.x = candidatePos.x;
+			self.y = candidatePos.y;
+		} else if (!GLOBAL.level.collided(candidatePos.x,self.y,self.w,self.h)) {
+			self.x = candidatePos.x;
+			self.vy = 0;
+		} else if (!GLOBAL.level.collided(self.x,candidatePos.y,self.w,self.h)) {
+			self.vx = 0;
 			self.y = candidatePos.y;
 		} else {
 			self.vx = 0;
@@ -52,6 +60,10 @@ var Player = function(x,y) {
 		retVal.x = Math.floor(self.x + self.vx * self.speed * dts + 0.5);
 		retVal.y = Math.floor(self.y + self.vy * self.speed * dts + 0.5);
 		return retVal;
+	}
+	
+	self.standing = function(dts) {
+		return GLOBAL.level.collided(self.x, self.y + self.speed*dts, self.w, self.h);
 	}
 	
     self.draw = function(dt) {
