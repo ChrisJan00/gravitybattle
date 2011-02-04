@@ -2,7 +2,8 @@
 --  gravity (rotating)
 --  animations
 --  spikes
---  blocks
+--  gravity tiles
+--  walljump!
 --  second player
 --  graphics for that all
 --  ai?
