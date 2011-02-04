@@ -26,6 +26,7 @@ var Player = function(x,y) {
 	self.currentFrame = 0;
 	self.dts = 0;
 	self.gravityBlock = false;
+	self.gravityCap = 2;
 	
 	self.gravityPile = new GravityPile(0,0,10);
 	
@@ -100,10 +101,10 @@ var Player = function(x,y) {
 	
 	self.applyGravity = function() {
 		switch(GLOBAL.gravityDir) {
-			case 0: self.vy = self.vy + self.dts * GLOBAL.gravity/self.speed; break;
-			case 1: self.vy = self.vy - self.dts * GLOBAL.gravity/self.speed; break;
-			case 2: self.vx = self.vx - self.dts * GLOBAL.gravity/self.speed; break;
-			case 3: self.vx = self.vx + self.dts * GLOBAL.gravity/self.speed; break;
+			case 0: self.vy = Math.min(self.gravityCap, self.vy + self.dts * GLOBAL.gravity/self.speed); break;
+			case 1: self.vy = Math.max(-self.gravityCap, self.vy - self.dts * GLOBAL.gravity/self.speed); break;
+			case 2: self.vx = Math.max(-self.gravityCap, self.vx - self.dts * GLOBAL.gravity/self.speed); break;
+			case 3: self.vx = Math.min(self.gravityCap, self.vx + self.dts * GLOBAL.gravity/self.speed); break;
 		}
 	}
 	
