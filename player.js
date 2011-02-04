@@ -27,6 +27,16 @@ var Player = function(x,y) {
 	self.dts = 0;
 	self.gravityBlock = false;
 	
+	self.gravityPile = new GravityPile(0,0,10);
+	
+	self.complete = function() {
+		if (!self.animationStrip.complete)
+			return false;
+		if (!self.gravityPile.complete)
+			return false;
+		return true;
+	}
+	
 	self.update = function(dt) {
 		self.dts = dt/1000;
 		
@@ -48,11 +58,20 @@ var Player = function(x,y) {
 			self.vy = 0;
 		}
 		
+		self.gravityPile.update(dt);
 		// TESTING: change gravity direction
 		if (self.keys.check("action1")) {
 			if (!self.gravityBlock) {
 				self.gravityBlock = true;
-				GLOBAL.gravityDir = (GLOBAL.gravityDir+1)%4;
+				var newDir = self.gravityPile.getTile();
+				if (newDir != -1)
+					GLOBAL.gravityDir = newDir;
+				// GLOBAL.gravityDir = (GLOBAL.gravityDir+1)%4;
+			}
+		} else if (self.keys.check("action2")) {
+			if (!self.gravityBlock) {
+				self.gravityBlock = true;
+				self.gravityPile.getTile();
 			}
 		} else {
 			self.gravityBlock = false;
@@ -157,6 +176,7 @@ var Player = function(x,y) {
 			GLOBAL.gameContext.drawImage(self.animationStrip, self.currentFrame*self.w, 0, self.w, self.h, self.ix, self.iy, self.w, self.h);
 		}
 	
+		self.gravityPile.draw(dt);
 	}
 	
 };

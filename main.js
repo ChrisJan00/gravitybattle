@@ -5,7 +5,7 @@ GLOBAL.level = new Level();
 
 function loaderProgress()
 {
-	if (!GLOBAL.player1.animationStrip.complete)
+	if (!GLOBAL.player1.complete)
 		return 0;
 	if (!GLOBAL.level.tiles.complete)
 		return 50;
@@ -37,8 +37,8 @@ function prepareGame()
 // gravityDir:
 // 0: up
 // 1: down
-// 2: left
-// 3: right
+// 2: right
+// 3: left
 
 
 // Use this function to update the simulation.  dt will be the same as gameControl.updateStep, given in ms

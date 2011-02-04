@@ -1,9 +1,9 @@
---  walljump!
+--  walljump! -- todo...
 --  animations
 --  spikes
 --  gravity tiles
 
---  second player
+--  second player (collision between players)
 --  graphics for that all
 --  ai?
 -- --------------------------
