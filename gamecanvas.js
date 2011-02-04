@@ -1,5 +1,6 @@
 // ---------------------------------------------------------
 // GLOBAL OBJECTS
+var gameControl = new GameControl();
 
 var assets = new( function() {
     this.walkerImage = new Image();
