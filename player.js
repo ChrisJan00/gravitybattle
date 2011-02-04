@@ -1,13 +1,14 @@
 var Player = function(x,y) {
 	var self = this;
-	self.keys = GLOBAL.keyManager.appendMapping([
-		["up", 38],
-		["down", 40],
-		["left", 37],
-		["right", 39],
-		["action1", 75],
-		["action2", 76]
-	] );
+	// self.keys = GLOBAL.keyManager.appendMapping([
+		// ["up", 38],
+		// ["down", 40],
+		// ["left", 37],
+		// ["right", 39],
+		// ["action1", 75],
+		// ["action2", 76]
+	// ] );
+	self.keys = new( function() { this.check = function( str ) { return false; } } );
 	self.animationStrip = new Image();
     self.animationStrip.src = "graphics/Player.png";
 	

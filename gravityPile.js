@@ -14,7 +14,7 @@ var GravityPile = function(x,y,n) {
 	self.w = self.blockSide;
 	self.h = self.blockSide * self.pileSize;
 	
-	self.spawnTime = 3;
+	self.spawnTime = 5;
 	self.timer = self.spawnTime;
 	
 	self.complete = function() {
