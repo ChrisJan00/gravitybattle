@@ -36,9 +36,22 @@ var Player = function(x,y) {
 			self.vx = -1;
 		if (self.keys.check("right"))
 			self.vx = 1;
-			
-		self.x = Math.floor(self.x + self.vx * self.speed * dts + 0.5);
-		self.y = Math.floor(self.y + self.vy * self.speed * dts + 0.5);
+		
+		var candidatePos = self.updatedPos(dts);
+		if (!GLOBAL.level.collided(candidatePos.x,candidatePos.y,self.w,self.h)) {
+			self.x = candidatePos.x;
+			self.y = candidatePos.y;
+		} else {
+			self.vx = 0;
+			self.vy = 0;
+		}
+	}
+	
+	self.updatedPos = function(dts) {
+		var retVal = {}
+		retVal.x = Math.floor(self.x + self.vx * self.speed * dts + 0.5);
+		retVal.y = Math.floor(self.y + self.vy * self.speed * dts + 0.5);
+		return retVal;
 	}
 	
     self.draw = function(dt) {
@@ -47,8 +60,9 @@ var Player = function(x,y) {
 		if ((self.ix >=0) && (self.ix+self.w<=GLOBAL.canvasWidth) && (self.iy>=0) && (self.iy+self.h<=GLOBAL.canvasHeight))
 			GLOBAL.gameContext.drawImage(GLOBAL.bgCanvas, self.ix, self.iy, self.w, self.h, self.ix, self.iy, self.w, self.h); 
 
-		self.ix = Math.floor(self.x + self.vx * self.speed * dts + 0.5);
-		self.iy = Math.floor(self.y + self.vy * self.speed * dts + 0.5);
+		var candidatePos = self.updatedPos(dts); 
+		self.ix = candidatePos.x;
+		self.iy = candidatePos.y;
 		
 		if ((self.ix>=0) && (self.ix+self.w<=GLOBAL.canvasWidth) && (self.iy>=0) && (self.iy+self.h<=GLOBAL.canvasHeight)) {
 			GLOBAL.gameContext.drawImage(self.animationStrip, self.currentFrame*self.w, 0, self.w, self.h, self.ix, self.iy, self.w, self.h);

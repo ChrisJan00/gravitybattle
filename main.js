@@ -1,10 +1,15 @@
 
 GLOBAL.gameControl = new GameControl();
 GLOBAL.player1 = new Player(320,240);
+GLOBAL.level = new Level();
 
 function loaderProgress()
 {
-    return GLOBAL.player1.animationStrip.complete?100:0;
+	if (!GLOBAL.player1.animationStrip.complete)
+		return 0;
+	if (!GLOBAL.level.tiles.complete)
+		return 50;
+    return 100;
 }
 
 function prepareGame()
@@ -21,6 +26,9 @@ function prepareGame()
 	// start with an empty background
 	GLOBAL.bgContext.fillStyle = "#000000";
 	GLOBAL.bgContext.fillRect(0, 0, GLOBAL.gameCanvas.width, GLOBAL.gameCanvas.height);
+	
+	GLOBAL.level.init();
+	
 }
 
 // Use this function to update the simulation.  dt will be the same as gameControl.updateStep, given in ms
