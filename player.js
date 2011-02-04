@@ -92,9 +92,9 @@ var Player = function(x,y) {
 		case 1:
 			return GLOBAL.level.collided(self.x, self.y - self.speed*self.dts, self.w, self.h);
 		case 2:
-			return GLOBAL.level.collided(self.x - self.speed*self.dts, self.w, self.h, self.y);
+			return GLOBAL.level.collided(self.x - self.speed*self.dts, self.y, self.w, self.h);
 		case 3:
-			return GLOBAL.level.collided(self.x + self.speed*self.dts, self.w, self.h, self.y);
+			return GLOBAL.level.collided(self.x + self.speed*self.dts, self.y, self.w, self.h);
 		}
 	}
 	
