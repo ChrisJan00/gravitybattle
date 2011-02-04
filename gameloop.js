@@ -33,7 +33,7 @@ function draw(dt)
 //--------------------------------------------------------------------------------------------------
 // control class
 var GameControl = function() {
-	self = this;
+	var self = this;
     self.fps = 60;
     self.updateStep = 10; // ms
     self.loadInterval = 500; // ms
