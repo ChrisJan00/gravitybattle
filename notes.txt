@@ -2,6 +2,10 @@
 --  gravity (rotating)
 --  animations
 --  spikes
+--  blocks
+--  second player
+--  graphics for that all
+--  ai?
 -- --------------------------
 
 Explanation of the idea:

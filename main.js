@@ -29,6 +29,10 @@ function prepareGame()
 	
 	GLOBAL.level.init();
 	
+	/////////////////////////////////////
+	GLOBAL.gravity = 500;
+	GLOBAL.gravityDir = 1;
+	GLOBAL.drag = 200;
 }
 
 // Use this function to update the simulation.  dt will be the same as gameControl.updateStep, given in ms
