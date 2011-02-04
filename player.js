@@ -22,24 +22,16 @@ var Player = function(x,y) {
 	self.h = 16;
 	self.frameCount = 9;
 	self.currentFrame = 0;
+	self.dts = 0;
+	self.gravityBlock = false;
 	
 	self.update = function(dt) {
-		var dts = dt/1000;
+		self.dts = dt/1000;
 		
-		self.vx = 0;
-		// self.vy = 0;
-		if (self.keys.check("up") && self.standing(dts))
-			self.vy = -1;
-		// if (self.keys.check("down"))
-			// self.vy = 1;
-		if (self.keys.check("left"))
-			self.vx = -1;
-		if (self.keys.check("right"))
-			self.vx = 1;
-			
-		self.vy = self.vy + dts * GLOBAL.gravity/self.speed;
+		self.parseKeys();	
+		self.applyGravity();
 		
-		var candidatePos = self.updatedPos(dts);
+		var candidatePos = self.updatedPos();
 		if (!GLOBAL.level.collided(candidatePos.x,candidatePos.y,self.w,self.h)) {
 			self.x = candidatePos.x;
 			self.y = candidatePos.y;
@@ -53,26 +45,114 @@ var Player = function(x,y) {
 			self.vx = 0;
 			self.vy = 0;
 		}
+		
+		// TESTING: change gravity direction
+		if (self.keys.check("action1")) {
+			if (!self.gravityBlock) {
+				self.gravityBlock = true;
+				GLOBAL.gravityDir = (GLOBAL.gravityDir+1)%4;
+			}
+		} else {
+			self.gravityBlock = false;
+		}
 	}
 	
-	self.updatedPos = function(dts) {
+	self.updatedPos = function() {
 		var retVal = {}
-		retVal.x = Math.floor(self.x + self.vx * self.speed * dts + 0.5);
-		retVal.y = Math.floor(self.y + self.vy * self.speed * dts + 0.5);
+		retVal.x = Math.floor(self.x + self.vx * self.speed * self.dts + 0.5);
+		retVal.y = Math.floor(self.y + self.vy * self.speed * self.dts + 0.5);
 		return retVal;
 	}
 	
-	self.standing = function(dts) {
-		return GLOBAL.level.collided(self.x, self.y + self.speed*dts, self.w, self.h);
+	self.standing = function() {
+		switch(GLOBAL.gravityDir) {
+		case 0:
+			return GLOBAL.level.collided(self.x, self.y + self.speed*self.dts, self.w, self.h);
+		case 1:
+			return GLOBAL.level.collided(self.x, self.y - self.speed*self.dts, self.w, self.h);
+		case 2:
+			return GLOBAL.level.collided(self.x - self.speed*self.dts, self.w, self.h, self.y);
+		case 3:
+			return GLOBAL.level.collided(self.x + self.speed*self.dts, self.w, self.h, self.y);
+		}
+	}
+	
+	self.applyGravity = function() {
+		switch(GLOBAL.gravityDir) {
+			case 0: self.vy = self.vy + self.dts * GLOBAL.gravity/self.speed; break;
+			case 1: self.vy = self.vy - self.dts * GLOBAL.gravity/self.speed; break;
+			case 2: self.vx = self.vx - self.dts * GLOBAL.gravity/self.speed; break;
+			case 3: self.vx = self.vx + self.dts * GLOBAL.gravity/self.speed; break;
+		}
+	}
+	
+	self.parseKeys = function() {
+		switch(GLOBAL.gravityDir) {
+			case 0:
+				// up
+				self.vx = 0;
+				// self.vy = 0;
+				if (self.keys.check("up") && self.standing(self.dts))
+					self.vy = -1;
+				// if (self.keys.check("down"))
+					// self.vy = 1;
+				if (self.keys.check("left"))
+					self.vx = -1;
+				if (self.keys.check("right"))
+					self.vx = 1;
+				break;
+				
+			case 1:
+				// down
+				self.vx = 0;
+				// self.vy = 0;
+				// if (self.keys.check("up") && self.standing(dts))
+					// self.vy = -1;
+				if (self.keys.check("down") && self.standing(self.dts))
+					self.vy = 1;
+				if (self.keys.check("left"))
+					self.vx = -1;
+				if (self.keys.check("right"))
+					self.vx = 1;
+				break;
+			
+			case 2:
+				// left
+				// self.vx = 0;
+				self.vy = 0;
+				if (self.keys.check("up"))
+					self.vy = -1;
+				if (self.keys.check("down"))
+					self.vy = 1;
+				// if (self.keys.check("left"))
+					// self.vx = -1;
+				if (self.keys.check("right") && self.standing(self.dts))
+					self.vx = 1;
+				break;
+				
+			case 3:
+				// right
+				self.vy = 0;
+				// self.vx = 0;
+				if (self.keys.check("up"))
+					self.vy = -1;
+				if (self.keys.check("down"))
+					self.vy = 1;
+				if (self.keys.check("left") && self.standing(self.dts))
+					self.vx = -1;
+				// if (self.keys.check("right"))
+					// self.vx = 1;
+			break;
+		}
 	}
 	
     self.draw = function(dt) {
-		var dts = dt/1000;
+		self.dts = dt/1000;
 		
 		if ((self.ix >=0) && (self.ix+self.w<=GLOBAL.canvasWidth) && (self.iy>=0) && (self.iy+self.h<=GLOBAL.canvasHeight))
 			GLOBAL.gameContext.drawImage(GLOBAL.bgCanvas, self.ix, self.iy, self.w, self.h, self.ix, self.iy, self.w, self.h); 
 
-		var candidatePos = self.updatedPos(dts); 
+		var candidatePos = self.updatedPos(); 
 		self.ix = candidatePos.x;
 		self.iy = candidatePos.y;
 		
