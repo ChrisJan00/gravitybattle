@@ -75,6 +75,9 @@ function update(dt)
 // safely ignore it if you want (no interpolation at all).
 function draw(dt)
 { 
+	GLOBAL.player1.undraw(dt);
+	GLOBAL.player2.undraw(dt);
+	
 	GLOBAL.player1.draw(dt);
 	GLOBAL.player2.draw(dt);
 }

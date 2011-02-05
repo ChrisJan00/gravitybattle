@@ -164,11 +164,13 @@ var Player = function(x,y) {
 		}
 	}
 	
-    self.draw = function(dt) {
-		self.dts = dt/1000;
-		
+	self.undraw = function(dt) {
 		if ((self.ix >=0) && (self.ix+self.w<=GLOBAL.canvasWidth) && (self.iy>=0) && (self.iy+self.h<=GLOBAL.canvasHeight))
 			GLOBAL.gameContext.drawImage(GLOBAL.bgCanvas, self.ix, self.iy, self.w, self.h, self.ix, self.iy, self.w, self.h); 
+	}
+	
+    self.draw = function(dt) {
+		self.dts = dt/1000;
 
 		var candidatePos = self.updatedPos(); 
 		self.ix = candidatePos.x;
