@@ -28,6 +28,7 @@ var Player = function(x,y) {
 	self.dts = 0;
 	self.gravityBlock = false;
 	self.gravityCap = 2;
+	self.jumpStrength = 1.15;
 	
 	self.gravityPile = new GravityPile(0,0,10);
 	
@@ -115,9 +116,9 @@ var Player = function(x,y) {
 			case 1:
 				var mx = 0;
 				if (GLOBAL.gravityDir==0 && self.keys.check("up") && self.standing(self.dts))
-					self.vy = -1;
+					self.vy = -self.jumpStrength;
 				if (GLOBAL.gravityDir==1 && self.keys.check("down") && self.standing(self.dts))
-					self.vy = 1;
+					self.vy = self.jumpStrength;
 				if (self.keys.check("left"))
 					mx = -1;
 				if (self.keys.check("right"))
@@ -144,9 +145,9 @@ var Player = function(x,y) {
 				if (self.keys.check("down"))
 					my = 1;
 				if (GLOBAL.gravityDir==2 && self.keys.check("right") && self.standing(self.dts))
-					self.vx = 1;
+					self.vx = self.jumpStrength;
 				if (GLOBAL.gravityDir==3 && self.keys.check("left") && self.standing(self.dts))
-					self.vx = -1;
+					self.vx = -self.jumpStrength;
 					
 				self.vy = self.vy + my * self.accel;
 				
