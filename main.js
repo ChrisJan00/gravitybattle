@@ -9,7 +9,7 @@ function loaderProgress()
 {
 	if (!GLOBAL.player1.complete)
 		return 0;
-	if (!GLOBAL.level.tiles.complete)
+	if (!GLOBAL.level.ready())
 		return 50;
     return 100;
 }
@@ -30,6 +30,7 @@ function prepareGame()
 	GLOBAL.bgContext.fillRect(0, 0, GLOBAL.gameCanvas.width, GLOBAL.gameCanvas.height);
 	
 	GLOBAL.level.init();
+	GLOBAL.level.draw(0);
 	
 	/////////////////////////////////////
 	GLOBAL.gravity = 500;

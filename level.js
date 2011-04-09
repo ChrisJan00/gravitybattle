@@ -15,6 +15,16 @@ var Level = function() {
 		self.rows = GLOBAL.mainMap.length;
 		self.cols = GLOBAL.mainMap[0].length;
 		
+		//self.draw(0);
+	}
+	
+	
+	self.update = function(dt) {
+		// nothing to do
+	}
+	
+	self.draw = function(dt) {
+		// nothing to do because we are using the game background
 		var bs = self.blockSide;
 		for (var jj=0;jj<GLOBAL.mainMap.length;jj++)
 			for (var ii=0;ii<GLOBAL.mainMap[jj].length;ii++) {
@@ -25,15 +35,6 @@ var Level = function() {
 			
 		GLOBAL.bgContext.drawImage(self.canvas, 0, 0, GLOBAL.canvasWidth, GLOBAL.canvasHeight);
 		GLOBAL.gameContext.drawImage(self.canvas, 0, 0, GLOBAL.canvasWidth, GLOBAL.canvasHeight);
-	}
-	
-	
-	self.update = function(dt) {
-		// nothing to do
-	}
-	
-	self.draw = function(dt) {
-		// nothing to do because we are using the game background
 	}
 	
 	self.collided = function( x,y,w,h ) {
@@ -50,5 +51,9 @@ var Level = function() {
 					return true;
 		
 		return false;
+	}
+	
+	self.ready = function() {
+		return self.tiles.complete;
 	}
 };
