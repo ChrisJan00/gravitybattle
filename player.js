@@ -1,3 +1,15 @@
+var AnimationControl = function(indices) {
+	var self = this;
+	self.frameIndices = indices.slice();
+	self.frameIndex = 0;
+	self.updateFrame = function() {
+		self.frameIndex = (self.frameIndex+1)%self.frameIndices.length;
+	}
+	self.currentFrame = function() {
+		return self.frameIndices[self.frameIndex];
+	}
+}
+
 var Player = function(x,y) {
 	var self = this;
 	// self.keys = GLOBAL.keyManager.appendMapping([
@@ -11,6 +23,11 @@ var Player = function(x,y) {
 	self.keys = new( function() { this.check = function( str ) { return false; } } );
 	self.animationStrip = new Image();
     self.animationStrip.src = "graphics/Player1.png";
+    self.standingIndices = new AnimationControl([0]);
+	self.walkingIndices = new AnimationControl([1,2,3]);
+	self.jumpingIndices = new AnimationControl([4,5,6]);
+	self.dyingIndices = new AnimationControl([7,8]);
+	self.animationControl = self.standingIndices;
 	
 	self.x = x;
 	self.y = y;
@@ -29,6 +46,8 @@ var Player = function(x,y) {
 	self.gravityBlock = false;
 	self.gravityCap = 2;
 	self.jumpStrength = 1.15;
+	self.frameDelay = 100;
+	self.frameTimer = self.frameDelay;
 	
 	self.gravityPile = new GravityPile(0,0,10);
 	
@@ -79,7 +98,28 @@ var Player = function(x,y) {
 		} else {
 			self.gravityBlock = false;
 		}
+		
+		// animation
+		self.frameTimer -= dt;
+		if (self.frameTimer<=0) {
+			self.updateFrame();
+			self.frameTimer = self.frameDelay;
+		}
 	}
+	
+	self.updateFrame = function() {
+		if (self.standing()) {
+			if (self.vx!=0) {
+				self.animationControl = self.walkingIndices;
+			} else {
+				self.animationControl = self.standingIndices;
+			}
+		} else {
+			self.animationControl = self.jumpingIndices;
+		}
+		
+		self.animationControl.updateFrame();
+	} 
 	
 	self.updatedPos = function() {
 		var retVal = {}
@@ -178,7 +218,8 @@ var Player = function(x,y) {
 		self.iy = candidatePos.y;
 		
 		if ((self.ix>=0) && (self.ix+self.w<=GLOBAL.canvasWidth) && (self.iy>=0) && (self.iy+self.h<=GLOBAL.canvasHeight)) {
-			GLOBAL.gameContext.drawImage(self.animationStrip, self.currentFrame*self.w, 0, self.w, self.h, self.ix, self.iy, self.w, self.h);
+			GLOBAL.gameContext.drawImage(self.animationStrip, 
+				self.animationControl.currentFrame()*self.w, 0, self.w, self.h, self.ix, self.iy, self.w, self.h);
 		}
 	
 		self.gravityPile.draw(dt);
