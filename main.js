@@ -37,6 +37,7 @@ function prepareGame()
 	GLOBAL.gravityDir = 0;
 	
 	// player 1
+	GLOBAL.player1.init();
 	GLOBAL.player1.keys = GLOBAL.keyManager.appendMapping([
 		["up", 38],
 		["down", 40],
@@ -46,6 +47,7 @@ function prepareGame()
 		["action2", 76]
 	] );
 	// player 2
+	GLOBAL.player2.init();
 	GLOBAL.player2.keys = GLOBAL.keyManager.appendMapping([
 		["up", 69],
 		["down", 68],

@@ -28,6 +28,7 @@ var Player = function(x,y) {
 	self.jumpingIndices = new AnimationControl([4,5,6]);
 	self.dyingIndices = new AnimationControl([7,8]);
 	self.animationControl = self.standingIndices;
+	self.stripChoice = 0;
 	
 	self.x = x;
 	self.y = y;
@@ -48,6 +49,7 @@ var Player = function(x,y) {
 	self.jumpStrength = 1.15;
 	self.frameDelay = 100;
 	self.frameTimer = self.frameDelay;
+	self.lookingRight = true;
 	
 	self.gravityPile = new GravityPile(0,0,10);
 	
@@ -57,6 +59,10 @@ var Player = function(x,y) {
 		if (!self.gravityPile.complete)
 			return false;
 		return true;
+	}
+	
+	self.init = function () {
+		self.prepareAnimationAngles();
 	}
 	
 	self.update = function(dt) {
@@ -105,11 +111,14 @@ var Player = function(x,y) {
 			self.updateFrame();
 			self.frameTimer = self.frameDelay;
 		}
+		
+		self.updateStripChoice();
 	}
 	
 	self.updateFrame = function() {
 		if (self.standing()) {
-			if (self.vx!=0) {
+			if (((GLOBAL.gravityDir==0||GLOBAL.gravityDir==1) && self.vx!=0) || 
+				((GLOBAL.gravityDir==2||GLOBAL.gravityDir==3) && self.vy!=0)) {
 				self.animationControl = self.walkingIndices;
 			} else {
 				self.animationControl = self.standingIndices;
@@ -120,6 +129,31 @@ var Player = function(x,y) {
 		
 		self.animationControl.updateFrame();
 	} 
+	
+	self.updateStripChoice = function() {
+		switch(GLOBAL.gravityDir) {
+			case 0:
+				if (self.vx>0) self.lookingRight = true;
+				if (self.vx<0) self.lookingRight = false;
+				self.stripChoice = self.lookingRight?0:1; 
+			break;
+			case 1: 
+				if (self.vx>0) self.lookingRight = true;
+				if (self.vx<0) self.lookingRight = false;
+				self.stripChoice = self.lookingRight?2:3;
+			break;
+			case 2:
+				if (self.vy>0) self.lookingRight = true;
+				if (self.vy<0) self.lookingRight = false;
+				self.stripChoice = self.lookingRight?4:5;
+			break;
+			case 3:
+				if (self.vy>0) self.lookingRight = true;
+				if (self.vy<0) self.lookingRight = false;
+				self.stripChoice = self.lookingRight?6:7;
+			break;
+		}
+	}
 	
 	self.updatedPos = function() {
 		var retVal = {}
@@ -218,11 +252,102 @@ var Player = function(x,y) {
 		self.iy = candidatePos.y;
 		
 		if ((self.ix>=0) && (self.ix+self.w<=GLOBAL.canvasWidth) && (self.iy>=0) && (self.iy+self.h<=GLOBAL.canvasHeight)) {
-			GLOBAL.gameContext.drawImage(self.animationStrip, 
+			GLOBAL.gameContext.drawImage(self.strips[self.stripChoice], 
 				self.animationControl.currentFrame()*self.w, 0, self.w, self.h, self.ix, self.iy, self.w, self.h);
 		}
 	
 		self.gravityPile.draw(dt);
+	}
+	
+	self.prepareAnimationAngles = function() {
+		self.strips = [];
+		
+		// gravity down - look right (normal)
+		//self.strips[0] = self.animationStrip;
+		
+		for (var i=0;i<8;i++)
+			self.strips[i] = self.modifiedStrip(i);
+		
+		// gravity down - look left
+		//self.strips[1] = self.modifiedStrip( 1, 1, 0 );
+		
+		// gravity up - look right
+		//self.strips[2] = self.modifiedStrip( 1, -1, 0 );
+		
+		// gravity up - look left
+		//self.strips[3] = self.modifiedStrip( -1, -1, 0 );
+		
+		// gravity left - look down
+		//self.strips[4] = self.modifiedStrip( 1, 1, 90);
+		
+		// gravity left - look down
+		//self.strips[5] = self.modifiedStrip( 1, -1, 90);
+		
+		// gravity right - look up
+		//[6]
+		// gravity right - look down
+		// 7
+	}
+	
+			// note: this will be useful for the player
+		//GLOBAL.gameContext.translate(self.baseWidth,0);
+		//GLOBAL.gameContext.scale(-1,1);
+		//GLOBAL.gameContext.rotate(PI/2);
+		
+	self.modifiedStrip = function( stripIndex ) {
+		var canvas = document.createElement('canvas');
+		var ctx = canvas.getContext('2d');
+		
+		var fc = self.animationStrip.width / self.w;
+		for (var i=0;i<fc;i++) {
+			
+			switch (stripIndex) {
+			case 1: // dl
+				ctx.translate((i*2+1)*self.w, 0);
+				ctx.scale(-1, 1);
+				break;
+			case 2: // ur
+				ctx.translate(0, self.h);
+				ctx.scale(1, -1);
+				break;
+			case 3: // ul
+				ctx.translate((i*2+1)*self.w, self.h);
+				ctx.scale(-1, -1);
+				break;
+			case 4: // ld
+				ctx.translate((i+1)*self.w, -self.h*i);
+				ctx.rotate(GLOBAL.PI / 2);
+				break;
+			case 5: // lu
+				ctx.translate((i+1)*self.w, self.h*(i+1));
+				ctx.scale(1, -1);
+				ctx.rotate(GLOBAL.PI / 2);
+				break;
+			case 6: // rd
+				ctx.translate(i*self.w, -self.h*i);
+				ctx.scale(1, -1);
+				ctx.rotate(-GLOBAL.PI / 2);
+				break;
+			case 7: // ru
+				ctx.translate(i*self.w, self.h*(i+1));
+				ctx.rotate(-GLOBAL.PI / 2);
+				break;
+			
+			}
+			
+			
+			
+			
+		
+			
+			
+			ctx.drawImage(self.animationStrip, i*self.w,0,self.w,self.h, i*self.w,0,self.w,self.h);
+			
+			// reset (we don't want to acumulate transformations)
+			ctx.setTransform(1,0,0,1,0,0);
+		}
+		
+		return canvas;
 	}
 	
 };

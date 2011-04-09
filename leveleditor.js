@@ -1,4 +1,3 @@
-PI = 3.141592653589793238462643383279;
 
 GLOBAL.levelEditor = new function()
 {
@@ -57,10 +56,6 @@ GLOBAL.levelEditor = new function()
 	}
 	
 	self.drawLevel = function() {
-		// note: this will be useful for the player
-		//GLOBAL.gameContext.translate(self.baseWidth,0);
-		//GLOBAL.gameContext.scale(-1,1);
-		//GLOBAL.gameContext.rotate(PI/2);
 		self.level.draw(0);
 		
 	}
